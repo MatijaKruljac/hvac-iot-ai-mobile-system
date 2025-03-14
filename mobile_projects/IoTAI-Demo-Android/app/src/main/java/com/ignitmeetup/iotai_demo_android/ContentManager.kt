@@ -140,7 +140,7 @@ class ContentManager(
         return sequence
     }
 
-    // Normalize input for TFLite model (matches Swift normalization)
+    // Normalize input for TFLite model
     private fun normalizeInput(input: HVACInput): ByteBuffer {
         val buffer = ByteBuffer.allocateDirect(3 * 4) // 3 floats, 4 bytes each
         buffer.order(ByteOrder.nativeOrder())
