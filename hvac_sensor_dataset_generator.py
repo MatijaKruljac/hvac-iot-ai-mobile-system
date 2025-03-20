@@ -13,14 +13,14 @@ end_date = start_date + timedelta(days=180) - timedelta(hours=1)  # Ends at 23:0
 timestamps = pd.date_range(start=start_date, end=end_date, freq='h')
 n = len(timestamps)
 
-# Generate temperature in Celsius: 21.1°C base, ±2.8°C daily cycle, N(0, 1.1) noise
+# Generate temperature in Celsius: 21.1°C base, ±2.8°C daily cycle, N(0, 1.1) noise - mean 0 and standard deviation 1.1.
 hours = timestamps.hour.values
 temperature = 21.1 + 2.8 * np.sin(2 * np.pi * hours / 24) + np.random.normal(0, 1.1, n)
 
-# Generate humidity (%): 50% base, ±10% daily cycle (shifted by π), N(0, 5) noise
+# Generate humidity (%): 50% base, ±10% daily cycle (shifted by π), N(0, 5) noise - mean 0 and standard deviation 5.
 humidity = 50 + 10 * np.sin(2 * np.pi * hours / 24 + np.pi) + np.random.normal(0, 5, n)
 
-# Generate pressure (psi): 300 psi base, N(0, 10) noise
+# Generate pressure (psi): 300 psi base, N(0, 10) noise - mean 0 and standard deviation 10.
 pressure = 300 + np.random.normal(0, 10, n)
 
 # Randomly select 5 maintenance events after the first 7 days
