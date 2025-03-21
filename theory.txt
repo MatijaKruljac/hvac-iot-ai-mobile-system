@@ -75,6 +75,35 @@ By contrast, AI (specifically a model like a Long Short-Term Memory (LSTM) netwo
 
 
 
+Data input normalization
+------------------------------------
+
+Normalizing input data is a key step when preparing data for machine learning models, and there are several important reasons why you need to do it:
+
+1. Ensures Consistent Scales Across Features
+Different features in your data often have different ranges. For example, temperature might range from -30 to 40, while humidity ranges from 0 to 100. If you don’t normalize, features with larger ranges can unfairly dominate the model’s learning process, leading to biased or inaccurate results. Normalization adjusts all features to a common scale, ensuring each one contributes equally.
+
+2. Speeds Up Model Training
+When you normalize your input data, the optimization process—like gradient descent—can find the best solution more quickly. Without normalization, the model might take longer to train or even fail to converge because the differences in scale make the optimization path more complex.
+
+3. Boosts Model Performance
+Many machine learning algorithms, especially those that rely on distance calculations (like k-nearest neighbors) or gradient-based optimization (like neural networks), work better when the input data is normalized. It helps the model learn patterns more effectively, leading to improved accuracy and reliability.
+
+4. Prevents Numerical Problems
+Very large or very small values in your input data can cause numerical instability, such as overflow or underflow, during calculations. Normalization keeps the data within a manageable range, avoiding these issues and making the model more stable.
+
+5. Meets Algorithm Expectations
+Some models, like neural networks with specific activation functions (e.g., sigmoid or tanh), expect input data to fall within a certain range to perform optimally. Normalizing your data ensures it meets these requirements, allowing the model to function as intended.
+
+How It Works?
+Normalization typically involves transforming your data so it has a mean of 0 and a standard deviation of 1 (this is called standardization). For each feature:
+	- Subtract the mean of that feature.
+	- Divide by its standard deviation.
+
+For example, if you’re working with temperature, humidity, and pressure, you’d calculate the mean and standard deviation from your training data and apply the same transformation to both training and test data. This keeps everything consistent.
+
+
+
 CONCLUSION
 ------------------------------------
 Benefits:

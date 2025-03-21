@@ -65,7 +65,8 @@ class ContentManager(
                     val inputBuffer = normalizeInput(input) // Input preparation logic
                     val output = Array(1) { FloatArray(1) } // Matches [1, 1] shape
                     interpreter.run(inputBuffer, output)
-                    val probability = output[0][0].coerceIn(0f, 1f) // Ensure value is between 0 and 1
+                    val probability =
+                        output[0][0].coerceIn(0f, 1f) // Ensure value is between 0 and 1
 
                     // Log for debugging
                     println(
@@ -142,12 +143,30 @@ class ContentManager(
 
     // Normalize input for TFLite model
     private fun normalizeInput(input: HVACInput): ByteBuffer {
-        val buffer = ByteBuffer.allocateDirect(3 * 4) // 3 floats, 4 bytes each
+        // Allocate a direct ByteBuffer with 12 bytes of memory
+        // - We need 3 floats: one for temperature, one for humidity, one for pressure
+        // - Each float is 4 bytes (32 bits), so total size is 3 * 4 = 12 bytes
+        // - Using allocateDirect() for efficient memory access by native code (TFLite)
+        val buffer = ByteBuffer.allocateDirect(3 * 4)
+
+        // Set the byte order to match the device's native order
+        // - This ensures that the floats are stored in the correct byte order (little-endian or big-endian)
+        // - Important for correct interpretation when passed to TFLite
         buffer.order(ByteOrder.nativeOrder())
-        buffer.putFloat((input.temperature - tempMean) / tempStd)
-        buffer.putFloat((input.humidity - humidMean) / humidStd)
-        buffer.putFloat((input.pressure - pressMean) / pressStd)
+
+        // Normalize each feature and add it to the buffer
+        // - Normalization formula: (value - mean) / std
+        // - This scales the input data to have a mean of 0 and standard deviation of 1
+        // - Helps the model perform better by reducing the impact of different scales in input features
+        buffer.putFloat((input.temperature - tempMean) / tempStd)  // Normalized temperature
+        buffer.putFloat((input.humidity - humidMean) / humidStd)    // Normalized humidity
+        buffer.putFloat((input.pressure - pressMean) / pressStd)    // Normalized pressure
+
+        // Rewind the buffer to prepare it for reading
+        // - After writing, the buffer's position is at the end (12 bytes)
+        // - rewind() sets the position back to 0, so TFLite can read from the start
         buffer.rewind()
+
         return buffer
     }
 

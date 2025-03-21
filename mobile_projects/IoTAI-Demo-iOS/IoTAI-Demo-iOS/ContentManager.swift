@@ -140,6 +140,8 @@ class ContentManager: ObservableObject {
     /// - Parameter input: HVACInput struct with raw sensor values
     /// - Returns: Normalized MLMultiArray
     private func hvacInputToMultiArray(_ input: HVACInput) -> MLMultiArray {
+        // shape: [1, 3] => This tells MLMultiArray to create a 2D array with 1 row and 3 columns
+        // Example: [ [temperature, humidity, pressure] ]
         let multiArray = try! MLMultiArray(shape: [1, 3], dataType: .float32)
 
         // Normalize each feature using (value - mean) / std
